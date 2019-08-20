@@ -5,10 +5,10 @@ import org.specs2.{ScalaCheck, Specification}
 
 class CategorySpec extends Specification with ScalaCheck {
 
-  import Category._
   val f = (i: Int) => i.toString
   val g = (s: String) => s.length
   val h = (i: Int) => i * i
+  val idFunc = (x: Int) => Math.pow(x, 0).toInt
 
   val p1: Prop = Prop.forAll { (a: Int) => a + a == 2 * a }
 
@@ -39,6 +39,7 @@ class CategorySpec extends Specification with ScalaCheck {
   def identityCheck = {
     Prop forAll { (i: Int) =>
       compose(f, id[Int])(i) mustEqual compose(id[String], f)(i)
+      compose(h, idFunc)(i) mustEqual compose(idFunc, h)(i)
     }
   }
 }

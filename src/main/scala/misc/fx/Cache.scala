@@ -1,29 +1,30 @@
 package misc.fx
 
-import java.util.concurrent.ConcurrentHashMap
+import java.util.Currency
+
+import scala.collection.concurrent.TrieMap
 
 trait Cache[K, V] {
-  abstract def addToCache(k: K, t: V): Cache[K, V]
-  abstract def lookupCache(k: K): Option[V]
+  def addToCache(k: K, t: V): Cache[K, V]
+  def lookupCache(k: K): Option[V]
+  def contains(k: K): Boolean
 }
-case class Converter(pair: (String, String), func: Double => Double, refPair: (String, String))
-case class FXEntry(fomCurrency: String, toCurrency: String, factorOrCurrency: Either[Double, String])
 
-class InMemoryConcurrentMapCache(mapCache: ConcurrentHashMap[(String, String), Converter]) extends Cache[(String, String), Converter] {
+class InMemoryConcurrentMapCache(mapCache: scala.collection.concurrent.Map[(Currency, Currency), Converter]) extends Cache[(Currency, Currency), Converter] {
 
-  override def addToCache(k: (String, String), v: Converter): Cache[(String, String), Converter] = {
-    val newMapCache = new ConcurrentHashMap(this.mapCache);
-    newMapCache.putIfAbsent(k, v)
-    new InMemoryConcurrentMapCache(newMapCache)
+  override def addToCache(k: (Currency, Currency), v: Converter): Cache[(Currency, Currency), Converter] = {
+    new InMemoryConcurrentMapCache(mapCache += ((k, v)))
   }
 
-  override def lookupCache(k: (String, String)): Option[Converter] = {
-    Some(mapCache.get(k))
+  override def lookupCache(k: (Currency, Currency)): Option[Converter] = {
+    mapCache.get(k)
   }
+
+  override def contains(k: (Currency, Currency)): Boolean = mapCache.contains(k)
 }
 
 object InMemoryConcurrentMapCache {
   def apply() = {
-    new InMemoryConcurrentMapCache(new ConcurrentHashMap[(String, String), Converter]());
+    new InMemoryConcurrentMapCache(new TrieMap[(Currency, Currency), Converter]());
   }
 }
