@@ -15,12 +15,18 @@ libraryDependencies += "commons-io" % "commons-io" % "2.6"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
-  "com.typesafe.akka" %% "akka-testkit" % akkaVersion,
+  "com.typesafe.akka" %% "akka-testkit" % akkaVersion % Test,
+  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+  "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % Test,
+  "com.typesafe.akka" %% "akka-http" % "10.1.9",
+  "com.typesafe.akka" %% "akka-http-testkit" % "10.1.9" % Test,
+  "io.spray" %% "spray-json" % "1.3.5",
   "org.scalatest" %% "scalatest" % "3.0.5" % "test"
 )
 libraryDependencies ++= Seq("org.specs2" %% "specs2-core" % "4.6.0" % "test")
 libraryDependencies ++= Seq("org.specs2" %% "specs2-scalacheck" % "4.6.0" % "test")
 libraryDependencies ++= Seq("org.scalacheck" %% "scalacheck" % "1.14.0" % "test")
+
 libraryDependencies ++= Seq(
   "org.scala-saddle" %% "saddle-core" % "1.3.+"
   // (OPTIONAL) "org.scala-saddle" %% "saddle-hdf5" % "1.3.+"
