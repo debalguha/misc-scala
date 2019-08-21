@@ -5,11 +5,16 @@ object StampDutyCalculator {
     if(!firstHomeBuyer){
       calculate(capital)
     } else {
-      if(capital <= 650000){
+      capital match {
+        case x if x <= 650000 => 0
+        case x if x <= 799999 => calculate(799999 - x)
+        case _ => calculate(capital)
+      }
+      /*if(capital <= 650000){
         0
       } else {
-        calculate(capital)
-      }
+        calculate(capital - 650000)
+      }*/
     }
   }
   private def calculate(capital: Long) = capital match {
