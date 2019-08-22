@@ -31,10 +31,21 @@ object WebClient {
       case JsFalse => false
     }
   }
+
+  def execSingleRequest(uriBase: String, params: Map[String, String]) = {
+    val uri = Uri(uriBase).withQuery(Query(params))
+    Http().singleRequest(HttpRequest().withUri(uri)) flatMap {
+      response => {
+        Unmarshal(response.entity).to[String]
+      }
+    }
+  }
+
   def main(args: Array[String]): Unit = {
     //doLowLevel
     doRequestLevel
   }
+
   def doRequestLevel() = {
     val uri = Uri("http://calculatorapp.infochoice.com.au/calculationService/HomeLoanStampDuty").withQuery(Query(
       "callback" -> " ",
