@@ -1,12 +1,12 @@
 package misc.loan.lmi
 
-case class Range(start: Long, end: Long) {
+case class CapitalRange(start: Long, end: Long) {
   def withinRange(value: Long): Boolean = value <= end && value >= start
 }
-case class TableRow(loanPercentage: Int, columns: Seq[(Range, Double)]) {
+case class TableRow(loanPercentage: Int, columns: Seq[(CapitalRange, Double)]) {
   val rangeMap = columns.toMap
   def findInRange(capital: Long): Double = {
-    rangeMap.find(tuple => tuple._1.withinRange(capital)).getOrElse((Range(-1L, 0L), 0d))._2
+    rangeMap.find(tuple => tuple._1.withinRange(capital)).getOrElse((CapitalRange(-1L, 0L), 0d))._2
   }
 }
 class LMILookupTable(val rows: Seq[TableRow]) {
@@ -19,7 +19,7 @@ object LMILookupTable {
     val rangeValueMap = headerDataMap.tail.map(tuple => {
       val start = tuple._1.split("-")(0).trim.toLong
       val end = tuple._1.split("-")(1).trim.toLong
-      (Range(start, end), tuple._2.toDouble)
+      (CapitalRange(start, end), tuple._2.toDouble)
     }).toSeq
     val tableRow = TableRow(headerDataMap.head._2.toInt, rangeValueMap)
     new LMILookupTable(Seq(tableRow))
